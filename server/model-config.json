@@ -42,5 +42,9 @@
   "Taxi": {
     "dataSource": "db",
     "public": true
+  },
+  "TypeEntity": {
+    "dataSource": "db",
+    "public": true
   }
 }
