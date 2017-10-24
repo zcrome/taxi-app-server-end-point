@@ -30,6 +30,9 @@
     },
     "phone": {
       "type": "string"
+    },
+    "position": {
+      "type": "geopoint"
     }
   },
   "validations": [],
