@@ -51,7 +51,22 @@ module.exports = function(server) {
 	  	}else if(type == TAXI_TYPE_NAME){
 	  		taxisSockets.push(socket);
 	  	}
-	  	var filter = { fields:{username: false,dni: false,name: true,lastName: false,address: false,carName: false,carLicensePlate: false,phone: false,position: true} };
+	  	var filter = { fields:{
+	  				username: false,
+	  				dni: false,
+	  				name: true,
+	  				lastName: false,
+	  				address: false,
+	  				carName: false,
+	  				carLicensePlate: false,
+	  				phone: false,
+	  				position: true
+	  			},
+	  			where:{
+	  				isOnline: true
+	  			} 
+	  	};
+
 	  	Taxi.find(filter, function(err, taxis){
 	  		if(err){
 	  			console.log("error listado taxistas");
@@ -77,7 +92,7 @@ module.exports = function(server) {
 	  			console.log(err)
 	  			return
 	  		}
-	  		if(taxiFound){
+	  		if(taxiFound && taxiFound.isOnline){
 	  			taxiFound.updateAttributes(newAttributes, function(err, taxiUpdated){
 			  		if(err){
 			  			console.log("error acutlizar taxi");
@@ -91,19 +106,48 @@ module.exports = function(server) {
 	  		}
 	  	});
 
-
-	  	
-
 	  });
 
 
-	  socket.on('disconnect', function (data) {	   
-	    socket.emit('out', {message: "your re agoin to be disconnected"});
+	  socket.on('disconnect', function (data) {
+
+	  	var id = data.id;
+
+	  	console.log(data)
+	  	console.log("ID about to disconnect")
+	  	console.log(id);
+
+
+	  	Taxi.findById(id, function(err,taxi){
+	  		if(err){
+	  			console.log(err);
+	  			return;
+	  		}
+
+	  		taxi.updateAttributes({isOnline: false}, function(err, obj){
+				});
+
+
+	  	})
+
+	    // socket.emit('out', {message: "your re agoin to be disconnected"});
 	    socket.disconnect()
 	  });
-
-
 	});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

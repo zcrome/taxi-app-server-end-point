@@ -7,11 +7,18 @@ module.exports = function(Taxi) {
 
 	Taxi.afterRemote('login', function( ctx, modelInstance, next) {
     
+
 		Taxi.findById(modelInstance.userId, function(err, taxi){
 			if(err){
 				next();
 				return;
 			}
+
+			taxi.updateAttributes({isOnline: true}, function(err, obj){
+
+			});
+
+
 			modelInstance.code = taxi.code;
 			modelInstance.dni = taxi.dni;
 			modelInstance.name = taxi.name;
